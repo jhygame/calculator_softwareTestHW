@@ -1,4 +1,4 @@
 from py2cfg import CFGBuilder
 
-cfg = CFGBuilder().build_from_file('example', 'UI.py')
-cfg.build_visual('uiCFG', 'pdf')
+cfg = CFGBuilder().build_from_file('example', 'calculate.py')
+cfg.build_visual('calculateCFG', 'pdf')
