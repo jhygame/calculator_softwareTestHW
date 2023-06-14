@@ -1,6 +1,4 @@
-BASE_NUM = '0123456789'
+from py2cfg import CFGBuilder
 
-def is_base_num(char):
-    return char in BASE_NUM
-
-print(is_base_num(("+")))
+cfg = CFGBuilder().build_from_file('example', 'UI.py')
+cfg.build_visual('uiCFG', 'pdf')

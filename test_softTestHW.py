@@ -10,3 +10,9 @@ def test_operator_compare():
 
 def test_calculate_string():
     assert calculate.calculate_string("2+2") == 4
+
+def test_suffix_calculate():
+    assert calculate.suffix_calculate([2, 3, '+']) == 6
+
+if __name__ == '__main__':
+    pytest.main()

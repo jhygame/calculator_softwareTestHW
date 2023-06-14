@@ -1,0 +1,482 @@
+digraph cluster0example {
+	graph [compound=True fontname="DejaVu Sans Mono" label=example pack=False rankdir=TB ranksep=0.02]
+	node [fontname="DejaVu Sans Mono"]
+	edge [fontname="DejaVu Sans Mono"]
+	1 [label="import sys\limport clipboard\lfrom PyQt5.QtGui import QKeyEvent, QContextMenuEvent\lfrom PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QGridLayout, QLabel, QPushButton, QMainWindow, QSizePolicy, QMenu, QAction, qApp\lfrom PyQt5 import QtCore\lfrom calculate import calculate_string\lclass ScreenWidget(QLabel):\l\l    def __init__(self):\l        super().__init__()\l\l    def add(self, text):\l        self.setText(self.text() + text)\lclass CalculatorWidget(QMainWindow):\l    prepare_to_clear = False\l    button_texts = ('7', '8', '9', '/', 'C', 'Del'), ('4', '5', '6', '*', '('\l        ), ('1', '2', '3', '-', ')'), ('0', '.', '%', '+', '=')\l    key_to_button_text = {QtCore.Qt.Key_0: '0', QtCore.Qt.Key_1: '1',\l        QtCore.Qt.Key_2: '2', QtCore.Qt.Key_3: '3', QtCore.Qt.Key_4: '4',\l        QtCore.Qt.Key_5: '5', QtCore.Qt.Key_6: '6', QtCore.Qt.Key_7: '7',\l        QtCore.Qt.Key_8: '8', QtCore.Qt.Key_9: '9', QtCore.Qt.Key_Return:\l        '=', QtCore.Qt.Key_Ente...'=', QtCore.Qt.Key_Back...'Del',\l        QtCore.Qt.Key_ParenLeft: '(', QtCore.Qt.Key_Pare...')', QtCore\l        .Qt.Key_Period: '.', QtCore.Qt.Key_C: 'C', QtCore.Qt.Key_Plus...'+',\l        QtCore.Qt.Key_Minus: '-', QtCore.Qt.Key_Aste...'*', QtCore.Qt.\l        Key_Slash: '/', QtCore.Qt.Key_Perc...'%'}\l    button_texts_flatten = [text for texts in button_texts for text in texts]\l\l    def __init__(self):\l        super().__init__()\l        self.setGeometry(300, 300, 200, 300)\l        self.statusBar()\l        self.init_UI()\l        self.init_menu()\l        self.init_menubar()\l\l    def init_menubar(self):\l        menubar = self.menuBar()\l        file_menu = menubar.addMenu('File')\l        exit_act = QAction('Exit', self)\l        exit_act.setStatusTip('Exit application')\l        exit_act.triggered.connect(qApp.quit)\l        file_menu.addAction(exit_act)\l        edit_menu = menubar.addMenu('Edit')\l        copy_act = QAction('Copy', self)\l        copy_act.setStatusTip('Copy from clipboard')\l        copy_act.triggered.connect(self.copy_fun)\l        edit_menu.addAction(copy_act)\l        paste_act = QAction('Paste', self)\l        paste_act.setStatusTip('Paste to clipboard')\l        paste_act.triggered.connect(self.paste_fun)\l        edit_menu.addAction(paste_act)\l\l    def init_menu(self):\l        self.menu = QMenu()\l        self.menu_copy = self.menu.addAction('copy')\l        self.menu_paste = self.menu.addAction('paste')\l\l    def init_UI(self):\l        v_layout = QVBoxLayout()\l        self.screen = ScreenWidget()\l        v_layout.addWidget(self.screen, 2)\l        grid_layout = QGridLayout()\l        self.buttons = []\l        for x, texts in enumerate(self.button_texts):\l            for y, text in enumerate(texts):\l                button = QPushButton(text)\l                grid_layout.addWidget(button, x, y)\l                self.buttons.append(button)\l                button.clicked.connect(self.click_callback)\l                button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.\l                    Expanding)\l                button.setMinimumWidth(40)\l        v_layout.addLayout(grid_layout, 3)\l        self.setWindowTitle('Calculator')\l        mainWidget = QWidget()\l        mainWidget.setLayout(v_layout)\l        self.setCentralWidget(mainWidget)\l        self.show()\l\l    def click_callback(self):\l        sender = self.sender()\l        text = sender.text()\l        self.input_character(text)\l        self.statusBar().showMessage('press button \"%s\"' % text)\l\l    def keyPressEvent(self, event: QKeyEvent):\l        key = event.key()\l        if key in self.key_to_button_text:\l            key = self.key_to_button_text[key]\l            self.input_character(key)\l            self.statusBar().showMessage('press key \"%s\"' % key)\l\l    def contextMenuEvent(self, event: QContextMenuEvent):\l        action = self.menu.exec_(self.mapToGlobal(event.pos()))\l        if action == self.menu_copy:\l            self.copy_fun()\l        elif action == self.menu_paste:\l            self.paste_fun()\l\l    def paste_fun(self):\l        text = clipboard.paste()\l        if text != '' and 'C' not in text and '=' not in text and all([(\l            char in self.button_texts_flatten) for char in text]):\l            self.screen.setText(text)\l            self.statusBar().showMessage('paste successfully')\l        else:\l            self.statusBar().showMessage('paste failed')\l\l    def copy_fun(self):\l        if self.screen.text() != '':\l            clipboard.copy(self.screen.text())\l            self.statusBar().showMessage('copy successfully')\l        else:\l            self.statusBar().showMessage('copy failed')\l\l    def input_character(self, text):\l        if self.prepare_to_clear:\l            self.prepare_to_clear = False\l            self.screen.clear()\l        if text == 'C':\l            self.screen.clear()\l        elif text == '=':\l            if self.screen.text() != '':\l                self.screen.add('=%d' % calculate_string(self.screen.text()))\l                self.prepare_to_clear = True\l        elif text == 'Del':\l            if self.screen.text() != '':\l                self.screen.setText(self.screen.text()[:-1])\l        else:\l            self.screen.add(text)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+	156 [label="if __name__ == '__main__':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+	157 [label="app = QApplication(sys.argv)\lwidget = CalculatorWidget()\lsys.exit(app.exec_())\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+	157 -> 159 [label=calls style=dashed]
+	157 -> 160 [label=calls style=dashed]
+	157 -> 161 [label=calls style=dashed]
+	subgraph cluster_157 {
+		graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		159 [label=QApplication color="#E552FF" shape=tab style=filled]
+		160 [label=CalculatorWidget color="#E552FF" shape=tab style=filled]
+		161 [label="sys.exit" color="#E552FF" shape=tab style=filled]
+		162 [label="app.exec_" color="#E552FF" shape=tab style=filled]
+		161 -> 162 [color=black]
+	}
+	156 -> 157 [label="__name__ == '__main__'" color=green]
+	1 -> 156 [label="" color=black]
+	subgraph cluster0ScreenWidget {
+		graph [compound=True fontname="DejaVu Sans Mono" label=ScreenWidget pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		3 [label="def __init__(self):...\ldef add(self, text):...\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		subgraph cluster0__init__ {
+			graph [compound=True fontname="DejaVu Sans Mono" label=__init__ pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			5 [label="super().__init__()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			5 -> 6 [label=calls style=dashed]
+			subgraph cluster_5 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				6 [label="super.__init__" color="#E552FF" shape=tab style=filled]
+			}
+		}
+		subgraph cluster0add {
+			graph [compound=True fontname="DejaVu Sans Mono" label=add pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			9 [label="self.setText(self.text() + text)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			9 -> 10 [label=calls style=dashed]
+			subgraph cluster_9 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				10 [label="self.setText" color="#E552FF" shape=tab style=filled]
+				11 [label="self.text" color="#E552FF" shape=tab style=filled]
+				10 -> 11 [color=black]
+			}
+		}
+	}
+	subgraph cluster0CalculatorWidget {
+		graph [compound=True fontname="DejaVu Sans Mono" label=CalculatorWidget pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		15 [label="prepare_to_clear = False\lbutton_texts = ('7', '8', '9', '/', 'C', 'Del'), ('4', '5', '6', '*', '('), (\l    '1', '2', '3', '-', ')'), ('0', '.', '%', '+', '=')\lkey_to_button_text = {QtCore.Qt.Key_0: '0', QtCore.Qt.Key_1: '1', QtCore.Qt\l    .Key_2: '2', QtCore.Qt.Key_3: '3', QtCore.Qt.Key_4: '4', QtCore.Qt.\l    Key_5: '5', QtCore.Qt.Key_6: '6', QtCore.Qt.Key_7: '7', QtCore.Qt.Key_8:\l    '8', QtCore.Qt.Key_9: '9', QtCore.Qt.Key_Retu...'=', QtCore.Qt.\l    Key_Enter: '=', QtCore.Qt.Key_Back...'Del', QtCore.Qt.Key_ParenLeft:\l    '(', QtCore.Qt.Key_Pare...')', QtCore.Qt.Key_Peri...'.', QtCore.\l    Qt.Key_C: 'C', QtCore.Qt.Key_Plus...'+', QtCore.Qt.Key_Minu...'-',\l    QtCore.Qt.Key_Asterisk: '*', QtCore.Qt.Key_Slas...'/', QtCore.Qt.\l    Key_Percent: '%'}\lbutton_texts_flatten = [text for texts in button_texts for text in texts]\ldef __init__(self):...\ldef init_menubar(self):...\ldef init_menu(self):...\ldef init_UI(self):...\ldef click_callback(self):...\ldef keyPressEvent(self, event: QKeyEvent):...\ldef contextMenuEvent(self, event: QContextMenuEvent):...\ldef paste_fun(self):...\ldef copy_fun(self):...\ldef input_character(self, text):...\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		subgraph cluster1__init__ {
+			graph [compound=True fontname="DejaVu Sans Mono" label=__init__ pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			17 [label="super().__init__()\lself.setGeometry(300, 300, 200, 300)\lself.statusBar()\lself.init_UI()\lself.init_menu()\lself.init_menubar()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			17 -> 18 [label=calls style=dashed]
+			17 -> 19 [label=calls style=dashed]
+			17 -> 20 [label=calls style=dashed]
+			17 -> 21 [label=calls style=dashed]
+			17 -> 22 [label=calls style=dashed]
+			17 -> 23 [label=calls style=dashed]
+			subgraph cluster_17 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				18 [label="super.__init__" color="#E552FF" shape=tab style=filled]
+				19 [label="self.setGeometry" color="#E552FF" shape=tab style=filled]
+				20 [label="self.statusBar" color="#E552FF" shape=tab style=filled]
+				21 [label="self.init_UI" color="#E552FF" shape=tab style=filled]
+				22 [label="self.init_menu" color="#E552FF" shape=tab style=filled]
+				23 [label="self.init_menubar" color="#E552FF" shape=tab style=filled]
+			}
+		}
+		subgraph cluster0init_menubar {
+			graph [compound=True fontname="DejaVu Sans Mono" label=init_menubar pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			26 [label="menubar = self.menuBar()\lfile_menu = menubar.addMenu('File')\lexit_act = QAction('Exit', self)\lexit_act.setStatusTip('Exit application')\lexit_act.triggered.connect(qApp.quit)\lfile_menu.addAction(exit_act)\ledit_menu = menubar.addMenu('Edit')\lcopy_act = QAction('Copy', self)\lcopy_act.setStatusTip('Copy from clipboard')\lcopy_act.triggered.connect(self.copy_fun)\ledit_menu.addAction(copy_act)\lpaste_act = QAction('Paste', self)\lpaste_act.setStatusTip('Paste to clipboard')\lpaste_act.triggered.connect(self.paste_fun)\ledit_menu.addAction(paste_act)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			26 -> 27 [label=calls style=dashed]
+			26 -> 28 [label=calls style=dashed]
+			26 -> 29 [label=calls style=dashed]
+			26 -> 30 [label=calls style=dashed]
+			26 -> 31 [label=calls style=dashed]
+			26 -> 32 [label=calls style=dashed]
+			26 -> 33 [label=calls style=dashed]
+			26 -> 34 [label=calls style=dashed]
+			26 -> 35 [label=calls style=dashed]
+			26 -> 36 [label=calls style=dashed]
+			26 -> 37 [label=calls style=dashed]
+			26 -> 38 [label=calls style=dashed]
+			26 -> 39 [label=calls style=dashed]
+			26 -> 40 [label=calls style=dashed]
+			26 -> 41 [label=calls style=dashed]
+			subgraph cluster_26 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				27 [label="self.menuBar" color="#E552FF" shape=tab style=filled]
+				28 [label="menubar.addMenu" color="#E552FF" shape=tab style=filled]
+				29 [label=QAction color="#E552FF" shape=tab style=filled]
+				30 [label="exit_act.setStatusTip" color="#E552FF" shape=tab style=filled]
+				31 [label="exit_act.triggered.connect" color="#E552FF" shape=tab style=filled]
+				32 [label="file_menu.addAction" color="#E552FF" shape=tab style=filled]
+				33 [label="menubar.addMenu" color="#E552FF" shape=tab style=filled]
+				34 [label=QAction color="#E552FF" shape=tab style=filled]
+				35 [label="copy_act.setStatusTip" color="#E552FF" shape=tab style=filled]
+				36 [label="copy_act.triggered.connect" color="#E552FF" shape=tab style=filled]
+				37 [label="edit_menu.addAction" color="#E552FF" shape=tab style=filled]
+				38 [label=QAction color="#E552FF" shape=tab style=filled]
+				39 [label="paste_act.setStatusTip" color="#E552FF" shape=tab style=filled]
+				40 [label="paste_act.triggered.connect" color="#E552FF" shape=tab style=filled]
+				41 [label="edit_menu.addAction" color="#E552FF" shape=tab style=filled]
+			}
+		}
+		subgraph cluster0init_menu {
+			graph [compound=True fontname="DejaVu Sans Mono" label=init_menu pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			44 [label="self.menu = QMenu()\lself.menu_copy = self.menu.addAction('copy')\lself.menu_paste = self.menu.addAction('paste')\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			44 -> 45 [label=calls style=dashed]
+			44 -> 46 [label=calls style=dashed]
+			44 -> 47 [label=calls style=dashed]
+			subgraph cluster_44 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				45 [label=QMenu color="#E552FF" shape=tab style=filled]
+				46 [label="self.menu.addAction" color="#E552FF" shape=tab style=filled]
+				47 [label="self.menu.addAction" color="#E552FF" shape=tab style=filled]
+			}
+		}
+		subgraph cluster0init_UI {
+			graph [compound=True fontname="DejaVu Sans Mono" label=init_UI pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			50 [label="v_layout = QVBoxLayout()\lself.screen = ScreenWidget()\lv_layout.addWidget(self.screen, 2)\lgrid_layout = QGridLayout()\lself.buttons = []\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			50 -> 51 [label=calls style=dashed]
+			50 -> 52 [label=calls style=dashed]
+			50 -> 53 [label=calls style=dashed]
+			50 -> 54 [label=calls style=dashed]
+			subgraph cluster_50 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				51 [label=QVBoxLayout color="#E552FF" shape=tab style=filled]
+				52 [label=ScreenWidget color="#E552FF" shape=tab style=filled]
+				53 [label="v_layout.addWidget" color="#E552FF" shape=tab style=filled]
+				54 [label=QGridLayout color="#E552FF" shape=tab style=filled]
+			}
+			55 [label="for x, texts in enumerate(self.button_texts):\l" fillcolor="#FFBE52" shape=hexagon style="filled,solid"]
+			55 -> 56 [label=calls style=dashed]
+			subgraph cluster_55 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				56 [label=enumerate color="#E552FF" shape=tab style=filled]
+			}
+			57 [label="for y, text in enumerate(texts):\l" fillcolor="#FFBE52" shape=hexagon style="filled,solid"]
+			57 -> 59 [label=calls style=dashed]
+			subgraph cluster_57 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				59 [label=enumerate color="#E552FF" shape=tab style=filled]
+			}
+			60 [label="button = QPushButton(text)\lgrid_layout.addWidget(button, x, y)\lself.buttons.append(button)\lbutton.clicked.connect(self.click_callback)\lbutton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)\lbutton.setMinimumWidth(40)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			60 -> 62 [label=calls style=dashed]
+			60 -> 63 [label=calls style=dashed]
+			60 -> 64 [label=calls style=dashed]
+			60 -> 65 [label=calls style=dashed]
+			60 -> 66 [label=calls style=dashed]
+			60 -> 67 [label=calls style=dashed]
+			subgraph cluster_60 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				62 [label=QPushButton color="#E552FF" shape=tab style=filled]
+				63 [label="grid_layout.addWidget" color="#E552FF" shape=tab style=filled]
+				64 [label="self.buttons.append" color="#E552FF" shape=tab style=filled]
+				65 [label="button.clicked.connect" color="#E552FF" shape=tab style=filled]
+				66 [label="button.setSizePolicy" color="#E552FF" shape=tab style=filled]
+				67 [label="button.setMinimumWidth" color="#E552FF" shape=tab style=filled]
+			}
+			60 -> 57 [label="" color=black]
+			57 -> 60 [label="enumerate(texts)" color=green]
+			57 -> 55 [label="" color=green]
+			55 -> 57 [label="enumerate(self.button_texts)" color=green]
+			58 [label="v_layout.addLayout(grid_layout, 3)\lself.setWindowTitle('Calculator')\lmainWidget = QWidget()\lmainWidget.setLayout(v_layout)\lself.setCentralWidget(mainWidget)\lself.show()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			58 -> 68 [label=calls style=dashed]
+			58 -> 69 [label=calls style=dashed]
+			58 -> 70 [label=calls style=dashed]
+			58 -> 71 [label=calls style=dashed]
+			58 -> 72 [label=calls style=dashed]
+			58 -> 73 [label=calls style=dashed]
+			subgraph cluster_58 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				68 [label="v_layout.addLayout" color="#E552FF" shape=tab style=filled]
+				69 [label="self.setWindowTitle" color="#E552FF" shape=tab style=filled]
+				70 [label=QWidget color="#E552FF" shape=tab style=filled]
+				71 [label="mainWidget.setLayout" color="#E552FF" shape=tab style=filled]
+				72 [label="self.setCentralWidget" color="#E552FF" shape=tab style=filled]
+				73 [label="self.show" color="#E552FF" shape=tab style=filled]
+			}
+			55 -> 58 [label="" color=green]
+			50 -> 55 [label="" color=black]
+		}
+		subgraph cluster0click_callback {
+			graph [compound=True fontname="DejaVu Sans Mono" label=click_callback pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			76 [label="sender = self.sender()\ltext = sender.text()\lself.input_character(text)\lself.statusBar().showMessage('press button \"%s\"' % text)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			76 -> 77 [label=calls style=dashed]
+			76 -> 78 [label=calls style=dashed]
+			76 -> 79 [label=calls style=dashed]
+			76 -> 80 [label=calls style=dashed]
+			subgraph cluster_76 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				77 [label="self.sender" color="#E552FF" shape=tab style=filled]
+				78 [label="sender.text" color="#E552FF" shape=tab style=filled]
+				79 [label="self.input_character" color="#E552FF" shape=tab style=filled]
+				80 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			"76_input" [label="self.input_character" fillcolor="#afeeee" shape=parallelogram style="filled,solid"]
+			"76_input" -> 76
+		}
+		subgraph cluster0keyPressEvent {
+			graph [compound=True fontname="DejaVu Sans Mono" label=keyPressEvent pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			83 [label="key = event.key()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			83 -> 84 [label=calls style=dashed]
+			subgraph cluster_83 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				84 [label="event.key" color="#E552FF" shape=tab style=filled]
+			}
+			85 [label="if key in self.key_to_button_text:\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			86 [label="key = self.key_to_button_text[key]\lself.input_character(key)\lself.statusBar().showMessage('press key \"%s\"' % key)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			86 -> 88 [label=calls style=dashed]
+			86 -> 89 [label=calls style=dashed]
+			subgraph cluster_86 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				88 [label="self.input_character" color="#E552FF" shape=tab style=filled]
+				89 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			"86_input" [label="self.input_character" fillcolor="#afeeee" shape=parallelogram style="filled,solid"]
+			"86_input" -> 86
+			85 -> 86 [label="key in self.key_to_button_text" color=green]
+			83 -> 85 [label="" color=black]
+		}
+		subgraph cluster0contextMenuEvent {
+			graph [compound=True fontname="DejaVu Sans Mono" label=contextMenuEvent pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			92 [label="action = self.menu.exec_(self.mapToGlobal(event.pos()))\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			92 -> 93 [label=calls style=dashed]
+			subgraph cluster_92 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				93 [label="self.menu.exec_" color="#E552FF" shape=tab style=filled]
+				94 [label="self.mapToGlobal" color="#E552FF" shape=tab style=filled]
+				93 -> 94 [color=black]
+				95 [label="event.pos" color="#E552FF" shape=tab style=filled]
+				94 -> 95 [color=black]
+			}
+			96 [label="if action == self.menu_copy:\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			97 [label="self.copy_fun()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			97 -> 103 [label=calls style=dashed]
+			subgraph cluster_97 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				103 [label="self.copy_fun" color="#E552FF" shape=tab style=filled]
+			}
+			96 -> 97 [label="action == self.menu_copy" color=green]
+			99 [label="if action == self.menu_paste:\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			100 [label="self.paste_fun()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			100 -> 102 [label=calls style=dashed]
+			subgraph cluster_100 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				102 [label="self.paste_fun" color="#E552FF" shape=tab style=filled]
+			}
+			99 -> 100 [label="action == self.menu_paste" color=green]
+			96 -> 99 [label="(action != self.menu_copy)" color=red]
+			92 -> 96 [label="" color=black]
+		}
+		subgraph cluster0paste_fun {
+			graph [compound=True fontname="DejaVu Sans Mono" label=paste_fun pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			106 [label="text = clipboard.paste()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			106 -> 107 [label=calls style=dashed]
+			subgraph cluster_106 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				107 [label="clipboard.paste" color="#E552FF" shape=tab style=filled]
+			}
+			108 [label="if text != '' and 'C' not in text and '=' not in text and all([(char in\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			109 [label="self.screen.setText(text)\lself.statusBar().showMessage('paste successfully')\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			109 -> 113 [label=calls style=dashed]
+			109 -> 114 [label=calls style=dashed]
+			subgraph cluster_109 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				113 [label="self.screen.setText" color="#E552FF" shape=tab style=filled]
+				114 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			108 -> 109 [label="text != '' and 'C' not in text and '=' not in text and all([(char in self.
+    button_texts_flatten) for char in text])" color=red]
+			111 [label="self.statusBar().showMessage('paste failed')\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			111 -> 112 [label=calls style=dashed]
+			subgraph cluster_111 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				112 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			108 -> 111 [label="(not (text != '' and 'C' not in text and '=' not in text and all([(char in
+    self.button_texts_flatten) for char in text])))" color=red]
+			106 -> 108 [label="" color=black]
+		}
+		subgraph cluster0copy_fun {
+			graph [compound=True fontname="DejaVu Sans Mono" label=copy_fun pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			117 [label="if self.screen.text() != '':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			117 -> 118 [label=calls style=dashed]
+			subgraph cluster_117 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				118 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+			}
+			119 [label="clipboard.copy(self.screen.text())\lself.statusBar().showMessage('copy successfully')\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			119 -> 123 [label=calls style=dashed]
+			119 -> 125 [label=calls style=dashed]
+			subgraph cluster_119 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				123 [label="clipboard.copy" color="#E552FF" shape=tab style=filled]
+				124 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+				123 -> 124 [color=black]
+				125 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			117 -> 119 [label="self.screen.text() != ''" color=green]
+			121 [label="self.statusBar().showMessage('copy failed')\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			121 -> 122 [label=calls style=dashed]
+			subgraph cluster_121 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				122 [label="self.statusBar.showMessage" color="#E552FF" shape=tab style=filled]
+			}
+			117 -> 121 [label="(self.screen.text() == '')" color=red]
+		}
+		subgraph cluster0input_character {
+			graph [compound=True fontname="DejaVu Sans Mono" label=input_character pack=False rankdir=TB ranksep=0.02]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			128 [label="if self.prepare_to_clear:\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			129 [label="self.prepare_to_clear = False\lself.screen.clear()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			129 -> 131 [label=calls style=dashed]
+			subgraph cluster_129 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				131 [label="self.screen.clear" color="#E552FF" shape=tab style=filled]
+			}
+			130 [label="if text == 'C':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			132 [label="self.screen.clear()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			132 -> 153 [label=calls style=dashed]
+			subgraph cluster_132 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				153 [label="self.screen.clear" color="#E552FF" shape=tab style=filled]
+			}
+			130 -> 132 [label="text == 'C'" color=green]
+			134 [label="if text == '=':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			135 [label="if self.screen.text() != '':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			135 -> 147 [label=calls style=dashed]
+			subgraph cluster_135 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				147 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+			}
+			148 [label="self.screen.add('=%d' % calculate_string(self.screen.text()))\lself.prepare_to_clear = True\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			148 -> 150 [label=calls style=dashed]
+			subgraph cluster_148 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				150 [label="self.screen.add" color="#E552FF" shape=tab style=filled]
+				151 [label=calculate_string color="#E552FF" shape=tab style=filled]
+				150 -> 151 [color=black]
+				152 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+				151 -> 152 [color=black]
+			}
+			135 -> 148 [label="self.screen.text() != ''" color=green]
+			134 -> 135 [label="text == '='" color=green]
+			137 [label="if text == 'Del':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			138 [label="if self.screen.text() != '':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+			138 -> 142 [label=calls style=dashed]
+			subgraph cluster_138 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				142 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+			}
+			143 [label="self.screen.setText(self.screen.text()[:-1])\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			143 -> 145 [label=calls style=dashed]
+			subgraph cluster_143 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				145 [label="self.screen.setText" color="#E552FF" shape=tab style=filled]
+				146 [label="self.screen.text" color="#E552FF" shape=tab style=filled]
+				145 -> 146 [color=black]
+			}
+			138 -> 143 [label="self.screen.text() != ''" color=green]
+			137 -> 138 [label="text == 'Del'" color=green]
+			140 [label="self.screen.add(text)\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+			140 -> 141 [label=calls style=dashed]
+			subgraph cluster_140 {
+				graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+				node [fontname="DejaVu Sans Mono"]
+				edge [fontname="DejaVu Sans Mono"]
+				141 [label="self.screen.add" color="#E552FF" shape=tab style=filled]
+			}
+			137 -> 140 [label="(text != 'Del')" color=red]
+			134 -> 137 [label="(text != '=')" color=red]
+			130 -> 134 [label="(text != 'C')" color=red]
+			129 -> 130 [label="" color=black]
+			128 -> 129 [label="self.prepare_to_clear" color=green]
+			128 -> 130 [label="(not self.prepare_to_clear)" color=red]
+		}
+	}
+	subgraph cluster_KEY {
+		graph [fontname="DejaVu Sans Mono" label=KEY]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		input [fillcolor="#afeeee" shape=parallelogram style=filled]
+		default [fillcolor="#FFFB81" shape=rectangle style=filled]
+		if [fillcolor="#FF6752" shape=diamond style=filled]
+		for [fillcolor="#FFBE52" shape=hexagon style=filled]
+		while [fillcolor="#FFBE52" shape=hexagon style=filled]
+		call [fillcolor="#E552FF" shape=tab style=filled]
+		return [fillcolor="#98fb98" shape=parallelogram style=filled]
+		try [fillcolor=orange shape=Mdiamond style=filled]
+		raise [fillcolor="#98fb98" shape=house style=filled]
+		if -> input [style=invis]
+		input -> call [style=invis]
+		for -> return [style=invis]
+		return -> default [style=invis]
+		try -> raise [style=invis]
+	}
+}

@@ -1,0 +1,87 @@
+digraph cluster0example {
+	graph [compound=True fontname="DejaVu Sans Mono" label=example pack=False rankdir=TB ranksep=0.02]
+	node [fontname="DejaVu Sans Mono"]
+	edge [fontname="DejaVu Sans Mono"]
+	1 [label="import pytest\limport calculate\limport UI\ldef fun_c(a):...\ldef test_operator_compare():...\ldef test_calculate_string():...\ldef test_suffix_calculate():...\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+	24 [label="if __name__ == '__main__':\l" fillcolor="#FF6752" shape=diamond style="filled,solid"]
+	25 [label="pytest.main()\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+	25 -> 27 [label=calls style=dashed]
+	subgraph cluster_25 {
+		graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		27 [label="pytest.main" color="#E552FF" shape=tab style=filled]
+	}
+	24 -> 25 [label="__name__ == '__main__'" color=green]
+	1 -> 24 [label="" color=black]
+	subgraph cluster0fun_c {
+		graph [compound=True fontname="DejaVu Sans Mono" label=fun_c pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		3 [label="return a + a\l" fillcolor="#98fb98" shape=parallelogram style="filled,solid"]
+	}
+	subgraph cluster0test_operator_compare {
+		graph [compound=True fontname="DejaVu Sans Mono" label=test_operator_compare pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		7 [label="assert calculate.operator_compare('+', '*') == -1\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		9 [label="" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		9 -> 10 [label=calls style=dashed]
+		subgraph cluster_9 {
+			graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			10 [label="calculate.operator_compare" color="#E552FF" shape=tab style=filled]
+		}
+		7 -> 9 [label="calculate.operator_compare('+', '*') == -1" color=black]
+	}
+	subgraph cluster0test_calculate_string {
+		graph [compound=True fontname="DejaVu Sans Mono" label=test_calculate_string pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		13 [label="assert calculate.calculate_string('2+2') == 4\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		15 [label="" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		15 -> 16 [label=calls style=dashed]
+		subgraph cluster_15 {
+			graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			16 [label="calculate.calculate_string" color="#E552FF" shape=tab style=filled]
+		}
+		13 -> 15 [label="calculate.calculate_string('2+2') == 4" color=black]
+	}
+	subgraph cluster0test_suffix_calculate {
+		graph [compound=True fontname="DejaVu Sans Mono" label=test_suffix_calculate pack=False rankdir=TB ranksep=0.02]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		19 [label="assert calculate.suffix_calculate([2, 3, '+']) == 6\l" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		21 [label="" fillcolor="#FFFB81" shape=rectangle style="filled,solid"]
+		21 -> 22 [label=calls style=dashed]
+		subgraph cluster_21 {
+			graph [color=purple compound=true fontname="DejaVu Sans Mono" label="" rankdir=TB ranksep=0.02 shape=tab style=filled]
+			node [fontname="DejaVu Sans Mono"]
+			edge [fontname="DejaVu Sans Mono"]
+			22 [label="calculate.suffix_calculate" color="#E552FF" shape=tab style=filled]
+		}
+		19 -> 21 [label="calculate.suffix_calculate([2, 3, '+']) == 6" color=black]
+	}
+	subgraph cluster_KEY {
+		graph [fontname="DejaVu Sans Mono" label=KEY]
+		node [fontname="DejaVu Sans Mono"]
+		edge [fontname="DejaVu Sans Mono"]
+		input [fillcolor="#afeeee" shape=parallelogram style=filled]
+		default [fillcolor="#FFFB81" shape=rectangle style=filled]
+		if [fillcolor="#FF6752" shape=diamond style=filled]
+		for [fillcolor="#FFBE52" shape=hexagon style=filled]
+		while [fillcolor="#FFBE52" shape=hexagon style=filled]
+		call [fillcolor="#E552FF" shape=tab style=filled]
+		return [fillcolor="#98fb98" shape=parallelogram style=filled]
+		try [fillcolor=orange shape=Mdiamond style=filled]
+		raise [fillcolor="#98fb98" shape=house style=filled]
+		if -> input [style=invis]
+		input -> call [style=invis]
+		for -> return [style=invis]
+		return -> default [style=invis]
+		try -> raise [style=invis]
+	}
+}

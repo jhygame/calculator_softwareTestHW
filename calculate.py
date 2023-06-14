@@ -25,15 +25,16 @@ OPERATOR_CALCULATE = {
 
 
 def calculate_string(string):
-    print(string)
+    # print(string)
     signals = string_to_signals(string)
     suffixs = infix_to_suffix(signals)
     num = suffix_calculate(suffixs)
-    print(num)
+    # print(num)
     return num
 
 
 def string_to_signals(string):
+    # print(string)
     signals = []
     start = -1
     end = 0
@@ -107,6 +108,7 @@ def infix_to_suffix(signals):
 
 
 def suffix_calculate(suffixs):
+    # print(suffixs)
     stack = []
     for suffix in suffixs:
         if is_num(suffix):
@@ -121,4 +123,5 @@ def suffix_calculate(suffixs):
         else:
             raise Exception('the suffix is illegal')
     assert len(stack) == 1
+    print("suffixs: ", suffixs, "\nresult: ", stack[0])
     return stack[0]
