@@ -34,7 +34,7 @@ def calculate_string(string):
 
 
 def string_to_signals(string):
-    # print(string)
+    # print("string: ", string)
     signals = []
     start = -1
     end = 0
@@ -47,7 +47,7 @@ def string_to_signals(string):
                 start = end
             if end == len(string) - 1 or not is_base_num(string[end + 1]):
                 signals.append(int(string[start:end + 1]))
-    # print(signals)
+    # print("signals: ", signals)
     return signals
 
 
@@ -123,5 +123,17 @@ def suffix_calculate(suffixs):
         else:
             raise Exception('the suffix is illegal')
     assert len(stack) == 1
-    print("suffixs: ", suffixs, "\nresult: ", stack[0])
+    # print("suffixs: ", suffixs, "\nresult: ", stack[0])
     return stack[0]
+
+def input_character(text, screen):
+    if text == 'C':
+        return 'C'
+    elif text == '=':
+        if screen!= '':
+            return '='
+    elif text=='Del':
+        if screen != '':
+            return 'del'
+    else:
+        return 'input'

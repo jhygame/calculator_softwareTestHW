@@ -169,15 +169,19 @@ class CalculatorWidget(QMainWindow):
             self.screen.clear()
         if text == 'C':
             self.screen.clear()
+            return 'C'
         elif text == '=':
             if self.screen.text() != '':
                 self.screen.add('=%d' % calculate_string(self.screen.text()))
                 self.prepare_to_clear = True
+                return '='
         elif text=='Del':
             if self.screen.text() != '':
                 self.screen.setText(self.screen.text()[:-1])
+                return 'del'
         else:
             self.screen.add(text)
+            return 'input'
 
 
 if __name__ == '__main__':
