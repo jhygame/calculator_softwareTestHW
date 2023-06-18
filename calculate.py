@@ -130,7 +130,7 @@ def input_character(text, screen):
     if text == 'C':
         return 'C'
     elif text == '=':
-        if screen!= '':
+        if screen != '':
             return '='
     elif text=='Del':
         if screen != '':

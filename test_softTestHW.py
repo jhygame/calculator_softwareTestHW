@@ -74,6 +74,18 @@ def test_input_character():
     # 点击其他按钮，输入内容
     assert calculate.input_character("2", "1+") == 'input'
 
+def test_string_to_signals_EPC():
+    # [1, 2, 3]
+    assert calculate.string_to_signals(" ") == [' ']
+    # [1, 2, 4, 6, 7, 9, 2, 3]
+    assert calculate.string_to_signals("1") == [1]
+    # [1,2,4,5,2,4,5,2,3]
+    assert calculate.string_to_signals("++") == ['+', '+']
+    # [1,2,4,6,8,9,10,2,3]
+    assert calculate.string_to_signals(" ") == [' ']
+    # [1,2,4,6,8,9,10,2,4,5,2,3]
+    assert calculate.string_to_signals("+1") == ['+', 1]
+
 
 
 
